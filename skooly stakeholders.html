@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قائمة أصحاب المصلحة - Skooly Smart AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #050D1A;
+    font-family: 'Cairo', sans-serif;
+    color: #E8F4FF;
+    min-height: 100vh;
+    padding: 48px 24px 64px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(0,200,224,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(11,79,158,0.10) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,224,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,224,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 860px; margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 52px;
+  }
+
+  .header h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 30%, #00C8E0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .header h2 {
+    font-size: clamp(20px, 3vw, 30px);
+    font-weight: 900;
+    color: #00C8E0;
+    margin-bottom: 4px;
+  }
+
+  .header h3 {
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 700;
+    color: rgba(0,200,224,0.6);
+    letter-spacing: 1px;
+  }
+
+  .divider {
+    width: 100px; height: 2px;
+    background: linear-gradient(90deg, transparent, #00C8E0, transparent);
+    margin: 18px auto;
+  }
+
+  /* MAIN LAYOUT */
+  .layout {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    position: relative;
+  }
+
+  /* CENTER LINE */
+  .center-line {
+    width: 60px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-top: 20px;
+  }
+
+  .center-line::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(0,200,224,0.5) 10%,
+      rgba(0,200,224,0.5) 90%,
+      transparent 100%);
+    left: 50%; transform: translateX(-50%);
+  }
+
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #00C8E0;
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 0 0 10px rgba(0,200,224,0.6);
+    position: relative; z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .dot-gap { flex: 1; }
+
+  /* LEFT & RIGHT COLUMNS */
+  .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding-top: 10px;
+  }
+
+  .col-left { padding-left: 0; padding-right: 12px; }
+  .col-right { padding-right: 0; padding-left: 12px; }
+
+  /* STAKEHOLDER CARD */
+  .scard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .scard:hover { transform: translateY(-3px); }
+
+  /* ICON */
+  .scard-icon {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0,200,224,0.15), rgba(11,79,158,0.2));
+    border: 2px solid rgba(0,200,224,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 20px rgba(0,200,224,0.15);
+    transition: box-shadow 0.3s;
+  }
+
+  .scard:hover .scard-icon {
+    box-shadow: 0 8px 30px rgba(0,200,224,0.3);
+    border-color: rgba(0,200,224,0.6);
+  }
+
+  /* TITLE */
+  .scard-title {
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .scard-title .ar {
+    font-size: 16px;
+    font-weight: 900;
+    color: #fff;
+    display: block;
+  }
+
+  .scard-title .en {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(0,200,224,0.7);
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* TEXT BOX */
+  .scard-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,200,224,0.18);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(200,230,255,0.85);
+    line-height: 1.7;
+    text-align: center;
+    width: 100%;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .scard:hover .scard-box {
+    border-color: rgba(0,200,224,0.4);
+    background: rgba(0,200,224,0.05);
+  }
+
+  /* CONNECTOR LINES (horizontal) */
+  .connector {
+    position: absolute;
+    top: 50%; height: 2px;
+    background: linear-gradient(90deg, rgba(0,200,224,0.3), transparent);
+    z-index: 0;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    margin-top: 52px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(0,200,224,0.1);
+    font-size: 11px;
+    color: rgba(200,230,255,0.28);
+  }
+
+  @media (max-width: 600px) {
+    .layout { flex-direction: column; }
+    .center-line { display: none; }
+    .col { padding: 0; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Skooly Smart AI</h1>
+    <h2>قائمة أصحاب المصلحة</h2>
+    <h3>(stakeholders)</h3>
+    <div class="divider"></div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="layout">
+
+    <!-- RIGHT COLUMN (عكس RTL — يظهر على اليسار بصرياً) -->
+    <div class="col col-right">
+
+      <!-- الموظفون -->
+      <div class="scard">
+        <div class="scard-icon">👥</div>
+        <div class="scard-title">
+          <span class="ar">الموظفون</span>
+          <span class="en">(EMPLOYEES)</span>
+        </div>
+        <div class="scard-box">
+          فريق Skooly المكون من 12 عضواً موزعين على أقسام مخصصة
+        </div>
+      </div>
+
+      <!-- أولياء الأمور والطلاب -->
+      <div class="scard">
+        <div class="scard-icon">👨‍👧</div>
+        <div class="scard-title">
+          <span class="ar">أولياء الأمور والطلاب</span>
+          <span class="en">(STUDENTS AND PARENTS)</span>
+        </div>
+        <div class="scard-box">
+          الطلاب يرتدون الساعة الذكية للاستفادة من خدماتها ، أولياء الأمور يتابعون سلامة ابنائهم عبر المنصة
+        </div>
+      </div>
+
+      <!-- الموردون -->
+      <div class="scard">
+        <div class="scard-icon">🏭</div>
+        <div class="scard-title">
+          <span class="ar">الموردون</span>
+          <span class="en">(SUPPLIERS)</span>
+        </div>
+        <div class="scard-box">
+          الشركات والمصانع المنتجة للساعات الإلكترونية ولوحات التحكم ومبرمجي النظام للمنصة
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CENTER LINE -->
+    <div class="center-line">
+      <div class="dot"></div>
+      <div class="dot-gap"></div>
+      <div class="dot"></div>
+      <div class="dot-gap"></div>
+      <div class="dot"></div>
+      <div class="dot-gap"></div>
+      <div class="dot"></div>
+      <div class="dot-gap"></div>
+      <div class="dot"></div>
+    </div>
+
+    <!-- LEFT COLUMN -->
+    <div class="col col-left">
+
+      <!-- العملاء -->
+      <div class="scard">
+        <div class="scard-icon">🏫</div>
+        <div class="scard-title">
+          <span class="ar">العملاء</span>
+          <span class="en">(CUSTOMERS)</span>
+        </div>
+        <div class="scard-box">
+          المدارس والمؤسسات التعليمية العالمية والخاصة (B2B) التي تستخدم منصة Skooly لتعزيز امان الطالب
+        </div>
+      </div>
+
+      <!-- المستثمرون والداعمون -->
+      <div class="scard">
+        <div class="scard-icon">⌚</div>
+        <div class="scard-title">
+          <span class="ar">المستثمرون والداعمون</span>
+          <span class="en">(INVESTORS AND SPONSORS)</span>
+        </div>
+        <div class="scard-box">
+          الأطراف الداعية ومالية للمشروع من خُلال شراء الأسهم بهدف دعم تطوير النظام
+        </div>
+      </div>
+
+      <!-- الجهات التنظيمية -->
+      <div class="scard">
+        <div class="scard-icon">⚖️</div>
+        <div class="scard-title">
+          <span class="ar">الجهات التنظيمية</span>
+          <span class="en">(REGULATORS)</span>
+        </div>
+        <div class="scard-box">
+          الجهات الحكومية والتعليمية المعنية باللوائح الخاصة بحماية البيانات الشخصية والألتزام بالأنظمة
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Skooly Smart AI — قائمة أصحاب المصلحة © 2026 &nbsp;|&nbsp;
+    مدير المشروع: محمود محمد خادم &nbsp;|&nbsp; الرئيس التنفيذي: البراء البطاطي
+  </div>
+
+</div>
+</body>
+</html>
